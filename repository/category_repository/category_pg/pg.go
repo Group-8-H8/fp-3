@@ -23,3 +23,11 @@ func (c *categoryPg) CreateCategory(payload entity.Category) (*entity.Category, 
 
 	return &payload, nil
 }
+
+func (c *categoryPg) UpdateCategory(payload entity.Category) (*entity.Category, errs.MessageErr) {
+	err := c.db.Model(&payload).Where("id = ?", payload.ID).Updates(entity.Category{Type: payload.Type, UpdatedAt: payload.UpdatedAt}).Error
+	if err != nil {
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+	return &payload, nil
+}

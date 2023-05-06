@@ -8,6 +8,7 @@ import (
 
 type CategoryService interface {
 	CreateCategory(payload dto.NewCreateCategoryRequest) (*dto.NewCreateCategoryResponse, errs.MessageErr)
+	UpdateCategory(payload dto.NewUpdateCategoryRequest, categoryId uint) (*dto.NewUpdateCategoryResponse, errs.MessageErr)
 }
 
 type categoryService struct {
@@ -30,6 +31,23 @@ func (c *categoryService) CreateCategory(payload dto.NewCreateCategoryRequest) (
 		Id:        createdCategory.ID,
 		Type:      category.Type,
 		CreatedAt: category.CreatedAt,
+	}
+
+	return response, nil
+}
+
+func (c *categoryService) UpdateCategory(payload dto.NewUpdateCategoryRequest, categoryId uint) (*dto.NewUpdateCategoryResponse, errs.MessageErr) {
+	category := payload.UpdateCategoryRequestToEntity(categoryId)
+
+	updatedCategory, err := c.categoryRepo.UpdateCategory(category)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.NewUpdateCategoryResponse{
+		Id:        updatedCategory.ID,
+		Type:      updatedCategory.Type,
+		UpdatedAt: updatedCategory.UpdatedAt,
 	}
 
 	return response, nil

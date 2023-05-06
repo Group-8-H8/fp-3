@@ -35,9 +35,9 @@ func (c *categoryHandler) CreateCategory(ctx *gin.Context) {
 		return
 	}
 
-	createdCategory, err := c.categoryService.CreateCategory(requestBody)
-	if err != nil {
-		ctx.AbortWithStatusJSON(err.Status(), err)
+	createdCategory, errCreate := c.categoryService.CreateCategory(requestBody)
+	if errCreate != nil {
+		ctx.AbortWithStatusJSON(errCreate.Status(), errCreate)
 		return
 	}
 
@@ -59,8 +59,8 @@ func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
 	}
 
 	param := ctx.Param("categoryId")
-	u64, err := strconv.ParseUint(param, 10, 32)
-	if err != nil {
+	u64, errConv := strconv.ParseUint(param, 10, 32)
+	if errConv != nil {
 		newErrBadReq := errs.NewBadRequestError("invalid id category")
 		ctx.AbortWithStatusJSON(newErrBadReq.Status(), newErrBadReq)
 		return
@@ -68,10 +68,39 @@ func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
 	categoryId := uint(u64)
 
 	updatedCategory, errUpdated := c.categoryService.UpdateCategory(requestBody, categoryId)
-	if err != nil {
+	if errUpdated != nil {
 		ctx.AbortWithStatusJSON(errUpdated.Status(), errUpdated)
 		return
 	}
 
 	ctx.JSON(http.StatusOK, updatedCategory)
+}
+
+func (c *categoryHandler) GetCategories(ctx *gin.Context) {
+	response, err := c.categoryService.GetCategories()
+	if err != nil {
+		ctx.AbortWithStatusJSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (c *categoryHandler) GetCategory(ctx *gin.Context) {
+	categoryId := ctx.Param("categoryId")
+
+	id, err := strconv.Atoi(categoryId)
+	if err != nil {
+		errBadReq := errs.NewBadRequestError("invalid id category")
+		ctx.AbortWithStatusJSON(errBadReq.Status(), errBadReq)
+		return
+	}
+
+	response, errGet := c.categoryService.GetCategory(id)
+	if errGet != nil {
+		ctx.AbortWithStatusJSON(errGet.Status(), errGet)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
 }

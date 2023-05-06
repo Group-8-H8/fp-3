@@ -44,6 +44,8 @@ func StartApp() {
 		categoryRoute.Use(authService.Authentication())
 		categoryRoute.POST("/", authService.Authorization(), categoryHandler.CreateCategory)
 		categoryRoute.PATCH("/:categoryId/", authService.Authorization(), categoryHandler.UpdateCategory)
+		categoryRoute.GET("/", categoryHandler.GetCategories)
+		categoryRoute.GET("/:categoryId/", categoryHandler.GetCategory)
 	}
 
 	if PORT = os.Getenv("PORT"); PORT == "" {

@@ -9,6 +9,8 @@ import (
 type CategoryService interface {
 	CreateCategory(payload dto.NewCreateCategoryRequest) (*dto.NewCreateCategoryResponse, errs.MessageErr)
 	UpdateCategory(payload dto.NewUpdateCategoryRequest, categoryId uint) (*dto.NewUpdateCategoryResponse, errs.MessageErr)
+	GetCategories() ([]dto.NewGetCategoriesResponse, errs.MessageErr)
+	GetCategory(categoryId int) (*dto.NewGetCategoriesResponse, errs.MessageErr)
 }
 
 type categoryService struct {
@@ -48,6 +50,44 @@ func (c *categoryService) UpdateCategory(payload dto.NewUpdateCategoryRequest, c
 		Id:        updatedCategory.ID,
 		Type:      updatedCategory.Type,
 		UpdatedAt: updatedCategory.UpdatedAt,
+	}
+
+	return response, nil
+}
+
+func (c *categoryService) GetCategories() ([]dto.NewGetCategoriesResponse, errs.MessageErr) {
+	getCategories, err := c.categoryRepo.GetCategories()
+	if err != nil {
+		return nil, err
+	}
+
+	var responses []dto.NewGetCategoriesResponse
+	for _, e := range getCategories {
+		response := dto.NewGetCategoriesResponse{
+			Id:        e.ID,
+			Type:      e.Type,
+			UpdatedAt: e.UpdatedAt,
+			CreatedAt: e.CreatedAt,
+			Tasks:     e.Tasks,
+		}
+		responses = append(responses, response)
+	}
+
+	return responses, nil
+}
+
+func (c *categoryService) GetCategory(categoryId int) (*dto.NewGetCategoriesResponse, errs.MessageErr) {
+	getCategory, err := c.categoryRepo.GetCategory(categoryId)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.NewGetCategoriesResponse{
+		Id:        getCategory.ID,
+		Type:      getCategory.Type,
+		UpdatedAt: getCategory.UpdatedAt,
+		CreatedAt: getCategory.CreatedAt,
+		Tasks:     getCategory.Tasks,
 	}
 
 	return response, nil

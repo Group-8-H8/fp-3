@@ -7,4 +7,5 @@ import (
 
 type CategoryRepository interface {
 	CreateCategory(payload entity.Category) (*entity.Category, errs.MessageErr)
+	UpdateCategory(payload entity.Category) (*entity.Category, errs.MessageErr)
 }

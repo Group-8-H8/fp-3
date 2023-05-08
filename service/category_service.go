@@ -11,6 +11,7 @@ type CategoryService interface {
 	UpdateCategory(payload dto.NewUpdateCategoryRequest, categoryId uint) (*dto.NewUpdateCategoryResponse, errs.MessageErr)
 	GetCategories() ([]dto.NewGetCategoriesResponse, errs.MessageErr)
 	GetCategory(categoryId int) (*dto.NewGetCategoriesResponse, errs.MessageErr)
+	DeleteCategory(categoryId int) (*dto.NewDeleteCategoryResponse, errs.MessageErr)
 }
 
 type categoryService struct {
@@ -88,6 +89,22 @@ func (c *categoryService) GetCategory(categoryId int) (*dto.NewGetCategoriesResp
 		UpdatedAt: getCategory.UpdatedAt,
 		CreatedAt: getCategory.CreatedAt,
 		Tasks:     getCategory.Tasks,
+	}
+
+	return response, nil
+}
+
+func (c *categoryService) DeleteCategory(categoryId int) (*dto.NewDeleteCategoryResponse, errs.MessageErr) {
+	if _, err := c.categoryRepo.GetCategory(categoryId); err != nil && err.Status() == 404 {
+		return nil, err
+	}
+
+	if err := c.categoryRepo.DeleteCategory(categoryId); err != nil {
+		return nil, err
+	}
+
+	response := &dto.NewDeleteCategoryResponse{
+		Message: "Category has been successfully deleted",
 	}
 
 	return response, nil

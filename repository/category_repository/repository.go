@@ -10,4 +10,5 @@ type CategoryRepository interface {
 	UpdateCategory(payload entity.Category) (*entity.Category, errs.MessageErr)
 	GetCategories() ([]entity.Category, errs.MessageErr)
 	GetCategory(categoryId int) (*entity.Category, errs.MessageErr)
+	DeleteCategory(categoryId int) errs.MessageErr
 }

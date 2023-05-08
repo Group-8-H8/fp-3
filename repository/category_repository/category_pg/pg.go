@@ -64,3 +64,13 @@ func (c *categoryPg) GetCategory(categoryId int) (*entity.Category, errs.Message
 
 	return &category, nil
 }
+
+func (c *categoryPg) DeleteCategory(categoryId int) errs.MessageErr {
+	category := entity.Category{}
+
+	if err := c.db.Where("id = ?", categoryId).Delete(&category).Error; err != nil {
+		return errs.NewInternalServerError("something went wrong")
+	}
+
+	return nil
+}

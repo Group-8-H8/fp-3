@@ -42,6 +42,10 @@ func (c *categoryService) CreateCategory(payload dto.NewCreateCategoryRequest) (
 func (c *categoryService) UpdateCategory(payload dto.NewUpdateCategoryRequest, categoryId uint) (*dto.NewUpdateCategoryResponse, errs.MessageErr) {
 	category := payload.UpdateCategoryRequestToEntity(categoryId)
 
+	if _, err := c.categoryRepo.GetCategory(int(categoryId)); err != nil && err.Status() == 404 {
+		return nil, err
+	}
+
 	updatedCategory, err := c.categoryRepo.UpdateCategory(category)
 	if err != nil {
 		return nil, err

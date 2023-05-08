@@ -46,6 +46,7 @@ func StartApp() {
 		categoryRoute.PATCH("/:categoryId/", authService.Authorization(), categoryHandler.UpdateCategory)
 		categoryRoute.GET("/", categoryHandler.GetCategories)
 		categoryRoute.GET("/:categoryId/", categoryHandler.GetCategory)
+		categoryRoute.DELETE("/:categoryId/", authService.Authorization(), categoryHandler.DeleteCategory)
 	}
 
 	if PORT = os.Getenv("PORT"); PORT == "" {

@@ -104,3 +104,21 @@ func (c *categoryHandler) GetCategory(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (c *categoryHandler) DeleteCategory(ctx *gin.Context) {
+	param := ctx.Param("categoryId")
+	categoryId, errConv := strconv.Atoi(param)
+	if errConv != nil {
+		newErrConv := errs.NewBadRequestError("invalid category id")
+		ctx.AbortWithStatusJSON(newErrConv.Status(), newErrConv)
+		return
+	}
+
+	response, err := c.categoryService.DeleteCategory(categoryId)
+	if err != nil {
+		ctx.AbortWithStatusJSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}

@@ -27,14 +27,6 @@ func (c *categoryPg) CreateCategory(payload entity.Category) (*entity.Category, 
 }
 
 func (c *categoryPg) UpdateCategory(payload entity.Category) (*entity.Category, errs.MessageErr) {
-	checkCategory := entity.Category{}
-
-	if errGet := c.db.First(&checkCategory, "id = ?", payload.ID).Error; errGet != nil {
-		if errors.Is(errGet, gorm.ErrRecordNotFound) {
-			return nil, errs.NewNotFoundError("category not found")
-		}
-	}
-
 	err := c.db.Model(&payload).Where("id = ?", payload.ID).Updates(entity.Category{Type: payload.Type, UpdatedAt: payload.UpdatedAt}).Error
 	if err != nil {
 		return nil, errs.NewInternalServerError("something went wrong")
@@ -63,4 +55,14 @@ func (c *categoryPg) GetCategory(categoryId int) (*entity.Category, errs.Message
 	}
 
 	return &category, nil
+}
+
+func (c *categoryPg) DeleteCategory(categoryId int) errs.MessageErr {
+	category := entity.Category{}
+
+	if err := c.db.Where("id = ?", categoryId).Delete(&category).Error; err != nil {
+		return errs.NewInternalServerError("something went wrong")
+	}
+
+	return nil
 }

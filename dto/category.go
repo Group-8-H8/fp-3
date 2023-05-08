@@ -49,3 +49,7 @@ type NewGetCategoriesResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 	Tasks     []entity.Task
 }
+
+type NewDeleteCategoryResponse struct {
+	Message string `json:"message"`
+}

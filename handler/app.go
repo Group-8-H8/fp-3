@@ -51,7 +51,7 @@ func StartApp() {
 	}
 
 	taskRepo := task_pg.NewTaskRepository(db)
-	taskService := service.NewTaskService(taskRepo)
+	taskService := service.NewTaskService(taskRepo, categoryRepo)
 	taskHandler := http_handler.NewTaskHandler(taskService)
 
 	taskRoute := route.Group("/tasks")

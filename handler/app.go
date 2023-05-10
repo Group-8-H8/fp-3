@@ -7,6 +7,7 @@ import (
 	"github.com/Group-8-H8/fp-3/database"
 	"github.com/Group-8-H8/fp-3/handler/http_handler"
 	"github.com/Group-8-H8/fp-3/repository/category_repository/category_pg"
+	"github.com/Group-8-H8/fp-3/repository/task_repository/task_pg"
 	"github.com/Group-8-H8/fp-3/repository/user_repository/user_pg"
 	"github.com/Group-8-H8/fp-3/service"
 
@@ -47,6 +48,16 @@ func StartApp() {
 		categoryRoute.GET("/", categoryHandler.GetCategories)
 		categoryRoute.GET("/:categoryId/", categoryHandler.GetCategory)
 		categoryRoute.DELETE("/:categoryId/", authService.Authorization(), categoryHandler.DeleteCategory)
+	}
+
+	taskRepo := task_pg.NewTaskRepository(db)
+	taskService := service.NewTaskService(taskRepo)
+	taskHandler := http_handler.NewTaskHandler(taskService)
+
+	taskRoute := route.Group("/tasks")
+	{
+		taskRoute.Use(authService.Authentication())
+		taskRoute.POST("/", taskHandler.CreateTask)
 	}
 
 	if PORT = os.Getenv("PORT"); PORT == "" {

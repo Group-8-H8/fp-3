@@ -33,3 +33,14 @@ type NewCreateTaskResponse struct {
 	CategoryId  int       `json:"category_id"`
 	CreatedAt   time.Time `json:"created_at"`
 }
+
+type NewGetTaskResponse struct {
+	Id          int                   `json:"id"`
+	Title       string                `json:"title"`
+	Status      bool                  `json:"status"`
+	Description string                `json:"description"`
+	UserId      int                   `json:"user_id"`
+	CategoryId  int                   `json:"category_id"`
+	CreatedAt   time.Time             `json:"created_at"`
+	User        NewUserOnTaskResponse `json:"User"`
+}

@@ -70,3 +70,9 @@ type NewUpdateAccountResponse struct {
 type NewDeleteAccountResponse struct {
 	Message string `json:"message"`
 }
+
+type NewUserOnTaskResponse struct {
+	Id       int    `json:"id"`
+	Email    string `json:"email"`
+	FullName string `json:"full_name"`
+}

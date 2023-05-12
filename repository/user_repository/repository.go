@@ -8,6 +8,7 @@ import (
 type UserRepository interface {
 	Register(payload entity.User) (*entity.User, errs.MessageErr)
 	GetUserByEmail(payload entity.User) (*entity.User, errs.MessageErr)
+	GetUserById(userId int) (*entity.User, errs.MessageErr)
 	UpdateAccount(payload entity.User) (*entity.User, errs.MessageErr)
 	DeleteAccount(userId uint) errs.MessageErr
 }

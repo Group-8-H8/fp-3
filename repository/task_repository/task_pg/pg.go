@@ -22,3 +22,13 @@ func (t *taskRepository) CreateTask(payload entity.Task) (*entity.Task, errs.Mes
 
 	return &payload, nil
 }
+
+func (t *taskRepository) GetTasks(userId int) ([]entity.Task, errs.MessageErr) {
+	var tasks []entity.Task
+
+	if err := t.db.Where("user_id = ?", userId).Find(&tasks).Error; err != nil {
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+
+	return tasks, nil
+}

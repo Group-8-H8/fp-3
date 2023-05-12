@@ -36,6 +36,16 @@ func (u *userPG) GetUserByEmail(payload entity.User) (*entity.User, errs.Message
 	return &user, nil
 }
 
+func (u *userPG) GetUserById(userId int) (*entity.User, errs.MessageErr) {
+	var user entity.User
+
+	if err := u.db.First(&user, userId).Error; err != nil {
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+
+	return &user, nil
+}
+
 func (u *userPG) UpdateAccount(payload entity.User) (*entity.User, errs.MessageErr) {
 	var user entity.User
 

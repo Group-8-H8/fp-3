@@ -44,3 +44,15 @@ func (t *taskHandler) CreateTask(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, response)
 }
+
+func (t *taskHandler) GetTasks(ctx *gin.Context) {
+	user := ctx.MustGet("user").(entity.User)
+
+	response, err := t.taskService.GetTasks(int(user.ID))
+	if err != nil {
+		ctx.AbortWithStatusJSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}

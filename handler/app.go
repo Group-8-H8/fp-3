@@ -51,13 +51,14 @@ func StartApp() {
 	}
 
 	taskRepo := task_pg.NewTaskRepository(db)
-	taskService := service.NewTaskService(taskRepo, categoryRepo)
+	taskService := service.NewTaskService(taskRepo, categoryRepo, userRepo)
 	taskHandler := http_handler.NewTaskHandler(taskService)
 
 	taskRoute := route.Group("/tasks")
 	{
 		taskRoute.Use(authService.Authentication())
 		taskRoute.POST("/", taskHandler.CreateTask)
+		taskRoute.GET("/", taskHandler.GetTasks)
 	}
 
 	if PORT = os.Getenv("PORT"); PORT == "" {

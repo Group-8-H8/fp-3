@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/Group-8-H8/fp-3/dto"
+	"github.com/Group-8-H8/fp-3/entity"
 	"github.com/Group-8-H8/fp-3/pkg/errs"
 	"github.com/Group-8-H8/fp-3/repository/category_repository"
 	"github.com/Group-8-H8/fp-3/repository/task_repository"
@@ -9,8 +10,9 @@ import (
 )
 
 type TaskService interface {
-	CreateTask(payload dto.NewCreateTaskRequest, userId int) (*dto.NewCreateTaskResponse, errs.MessageErr)
-	GetTasks(userId int) ([]dto.NewGetTaskResponse, errs.MessageErr)
+	CreateTask(payload dto.NewCreateTaskRequest, payloadUser any) (*dto.NewCreateTaskResponse, errs.MessageErr)
+	GetTasks(payload any) ([]dto.NewGetTaskResponse, errs.MessageErr)
+	GetTask(taskId int, payloadUser any) (*dto.NewGetTaskResponse, errs.MessageErr)
 }
 
 type taskService struct {
@@ -27,8 +29,10 @@ func NewTaskService(taskRepo task_repository.TaskRepository, categoryRepo catego
 	}
 }
 
-func (t *taskService) CreateTask(payload dto.NewCreateTaskRequest, userId int) (*dto.NewCreateTaskResponse, errs.MessageErr) {
-	task := payload.CreateTaskRequestToEntity(userId)
+func (t *taskService) CreateTask(payload dto.NewCreateTaskRequest, payloadUser any) (*dto.NewCreateTaskResponse, errs.MessageErr) {
+	user := payloadUser.(entity.User)
+
+	task := payload.CreateTaskRequestToEntity(int(user.ID))
 
 	if _, err := t.categoryRepo.GetCategory(int(task.CategoryID)); err != nil && err.Status() == 404 {
 		return nil, errs.NewNotFoundError("invalid category")
@@ -52,16 +56,23 @@ func (t *taskService) CreateTask(payload dto.NewCreateTaskRequest, userId int) (
 	return response, nil
 }
 
-func (t *taskService) GetTasks(userId int) ([]dto.NewGetTaskResponse, errs.MessageErr) {
-	getTasks, err := t.taskRepo.GetTasks(userId)
+func (t *taskService) GetTasks(payload any) ([]dto.NewGetTaskResponse, errs.MessageErr) {
+	userPayload := payload.(entity.User)
+
+	getTasks, err := t.taskRepo.GetTasks(int(userPayload.ID))
 	if err != nil {
 		return nil, err
 	}
 
+	user, _ := t.userRepo.GetUserById(int(userPayload.ID))
+	userResponse := dto.NewUserOnTaskResponse{
+		Id:       int(user.ID),
+		Email:    user.Email,
+		FullName: user.Full_name,
+	}
+
 	responses := []dto.NewGetTaskResponse{}
 	for _, task := range getTasks {
-		user, _ := t.userRepo.GetUserById(userId)
-
 		response := dto.NewGetTaskResponse{
 			Id:          int(task.ID),
 			Title:       task.Title,
@@ -70,15 +81,39 @@ func (t *taskService) GetTasks(userId int) ([]dto.NewGetTaskResponse, errs.Messa
 			UserId:      int(task.UserID),
 			CategoryId:  int(task.CategoryID),
 			CreatedAt:   task.CreatedAt,
-			User: dto.NewUserOnTaskResponse{
-				Id:       int(user.ID),
-				Email:    user.Email,
-				FullName: user.Full_name,
-			},
+			User:        userResponse,
 		}
 
 		responses = append(responses, response)
 	}
 
 	return responses, nil
+}
+
+func (t *taskService) GetTask(taskId int, payloadUser any) (*dto.NewGetTaskResponse, errs.MessageErr) {
+	userPayload := payloadUser.(entity.User)
+	user, _ := t.userRepo.GetUserById(int(userPayload.ID))
+	userResponse := dto.NewUserOnTaskResponse{
+		Id:       int(user.ID),
+		Email:    user.Email,
+		FullName: user.Full_name,
+	}
+
+	getTask, err := t.taskRepo.GetTask(taskId, int(userPayload.ID))
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.NewGetTaskResponse{
+		Id:          int(getTask.ID),
+		Title:       getTask.Title,
+		Status:      getTask.Status,
+		Description: getTask.Description,
+		UserId:      int(getTask.UserID),
+		CategoryId:  int(getTask.CategoryID),
+		CreatedAt:   getTask.CreatedAt,
+		User:        userResponse,
+	}
+
+	return response, nil
 }

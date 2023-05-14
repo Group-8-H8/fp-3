@@ -59,6 +59,7 @@ func StartApp() {
 		taskRoute.Use(authService.Authentication())
 		taskRoute.POST("/", taskHandler.CreateTask)
 		taskRoute.GET("/", taskHandler.GetTasks)
+		taskRoute.GET("/:taskId", taskHandler.GetTask)
 	}
 
 	if PORT = os.Getenv("PORT"); PORT == "" {

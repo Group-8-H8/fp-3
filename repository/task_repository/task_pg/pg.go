@@ -1,6 +1,8 @@
 package task_pg
 
 import (
+	"errors"
+
 	"github.com/Group-8-H8/fp-3/entity"
 	"github.com/Group-8-H8/fp-3/pkg/errs"
 	"github.com/Group-8-H8/fp-3/repository/task_repository"
@@ -31,4 +33,17 @@ func (t *taskRepository) GetTasks(userId int) ([]entity.Task, errs.MessageErr) {
 	}
 
 	return tasks, nil
+}
+
+func (t *taskRepository) GetTask(taskId int, userId int) (*entity.Task, errs.MessageErr) {
+	var task entity.Task
+
+	if err := t.db.First(&task, "id = ? AND user_id = ?", taskId, userId).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, errs.NewNotFoundError("task not found")
+		}
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+
+	return &task, nil
 }

@@ -3,9 +3,9 @@ package http_handler
 import (
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/Group-8-H8/fp-3/dto"
-	"github.com/Group-8-H8/fp-3/entity"
 	"github.com/Group-8-H8/fp-3/pkg/errs"
 	"github.com/Group-8-H8/fp-3/service"
 	"github.com/gin-gonic/gin"
@@ -34,9 +34,9 @@ func (t *taskHandler) CreateTask(ctx *gin.Context) {
 		return
 	}
 
-	user := ctx.MustGet("user").(entity.User)
+	user := ctx.MustGet("user")
 
-	response, errCreated := t.taskService.CreateTask(requestBody, int(user.ID))
+	response, errCreated := t.taskService.CreateTask(requestBody, user)
 	if errCreated != nil {
 		ctx.AbortWithStatusJSON(errCreated.Status(), errCreated)
 		return
@@ -46,9 +46,29 @@ func (t *taskHandler) CreateTask(ctx *gin.Context) {
 }
 
 func (t *taskHandler) GetTasks(ctx *gin.Context) {
-	user := ctx.MustGet("user").(entity.User)
+	user := ctx.MustGet("user")
 
-	response, err := t.taskService.GetTasks(int(user.ID))
+	response, err := t.taskService.GetTasks(user)
+	if err != nil {
+		ctx.AbortWithStatusJSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}
+
+func (t *taskHandler) GetTask(ctx *gin.Context) {
+	user := ctx.MustGet("user")
+
+	param := ctx.Param("taskId")
+	taskId, errConv := strconv.Atoi(param)
+	if errConv != nil {
+		newErrConv := errs.NewBadRequestError("invalid task's id")
+		ctx.AbortWithStatusJSON(newErrConv.Status(), newErrConv)
+		return
+	}
+
+	response, err := t.taskService.GetTask(taskId, user)
 	if err != nil {
 		ctx.AbortWithStatusJSON(err.Status(), err)
 		return

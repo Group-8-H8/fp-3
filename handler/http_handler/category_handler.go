@@ -61,7 +61,7 @@ func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
 	param := ctx.Param("categoryId")
 	u64, errConv := strconv.ParseUint(param, 10, 32)
 	if errConv != nil {
-		newErrBadReq := errs.NewBadRequestError("invalid id category")
+		newErrBadReq := errs.NewBadRequestError("invalid category id")
 		ctx.AbortWithStatusJSON(newErrBadReq.Status(), newErrBadReq)
 		return
 	}
@@ -91,7 +91,7 @@ func (c *categoryHandler) GetCategory(ctx *gin.Context) {
 
 	id, err := strconv.Atoi(categoryId)
 	if err != nil {
-		errBadReq := errs.NewBadRequestError("invalid id category")
+		errBadReq := errs.NewBadRequestError("invalid category id")
 		ctx.AbortWithStatusJSON(errBadReq.Status(), errBadReq)
 		return
 	}

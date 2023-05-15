@@ -13,6 +13,7 @@ type TaskService interface {
 	CreateTask(payload dto.NewCreateTaskRequest, payloadUser any) (*dto.NewCreateTaskResponse, errs.MessageErr)
 	GetTasks(payload any) ([]dto.NewGetTaskResponse, errs.MessageErr)
 	GetTask(taskId int, payloadUser any) (*dto.NewGetTaskResponse, errs.MessageErr)
+	UpdateTask(payload dto.NewUpdateTaskRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr)
 }
 
 type taskService struct {
@@ -113,6 +114,33 @@ func (t *taskService) GetTask(taskId int, payloadUser any) (*dto.NewGetTaskRespo
 		CategoryId:  int(getTask.CategoryID),
 		CreatedAt:   getTask.CreatedAt,
 		User:        userResponse,
+	}
+
+	return response, nil
+}
+
+func (t *taskService) UpdateTask(payload dto.NewUpdateTaskRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr) {
+	user := payloadUser.(entity.User)
+
+	task := payload.UpdateTaskRequestToEntity(taskId, int(user.ID))
+
+	if _, errCheck := t.taskRepo.GetTask(taskId, int(user.ID)); errCheck != nil && errCheck.Status() == 404 {
+		return nil, errCheck
+	}
+
+	updatedTask, err := t.taskRepo.UpdateTask(task)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.NewUpdateTaskResponse{
+		Id:          int(updatedTask.ID),
+		Title:       updatedTask.Title,
+		Description: updatedTask.Description,
+		Status:      updatedTask.Status,
+		UserId:      int(updatedTask.UserID),
+		CategoryId:  int(updatedTask.CategoryID),
+		UpdatedAt:   updatedTask.UpdatedAt,
 	}
 
 	return response, nil

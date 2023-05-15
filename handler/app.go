@@ -44,10 +44,10 @@ func StartApp() {
 	{
 		categoryRoute.Use(authService.Authentication())
 		categoryRoute.POST("/", authService.Authorization(), categoryHandler.CreateCategory)
-		categoryRoute.PATCH("/:categoryId/", authService.Authorization(), categoryHandler.UpdateCategory)
+		categoryRoute.PATCH("/:categoryId", authService.Authorization(), categoryHandler.UpdateCategory)
 		categoryRoute.GET("/", categoryHandler.GetCategories)
-		categoryRoute.GET("/:categoryId/", categoryHandler.GetCategory)
-		categoryRoute.DELETE("/:categoryId/", authService.Authorization(), categoryHandler.DeleteCategory)
+		categoryRoute.GET("/:categoryId", categoryHandler.GetCategory)
+		categoryRoute.DELETE("/:categoryId", authService.Authorization(), categoryHandler.DeleteCategory)
 	}
 
 	taskRepo := task_pg.NewTaskRepository(db)
@@ -60,6 +60,7 @@ func StartApp() {
 		taskRoute.POST("/", taskHandler.CreateTask)
 		taskRoute.GET("/", taskHandler.GetTasks)
 		taskRoute.GET("/:taskId", taskHandler.GetTask)
+		taskRoute.PUT("/:taskId", taskHandler.UpdateTask)
 	}
 
 	if PORT = os.Getenv("PORT"); PORT == "" {

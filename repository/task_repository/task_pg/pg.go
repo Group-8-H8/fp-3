@@ -47,3 +47,13 @@ func (t *taskRepository) GetTask(taskId int, userId int) (*entity.Task, errs.Mes
 
 	return &task, nil
 }
+
+func (t *taskRepository) UpdateTask(payload entity.Task) (*entity.Task, errs.MessageErr) {
+	err := t.db.Model(&payload).Where("id = ? AND user_id = ?", payload.ID, payload.UserID).Updates(entity.Task{Title: payload.Title, Description: payload.Description, UpdatedAt: payload.UpdatedAt}).Error
+
+	if err != nil {
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+
+	return &payload, nil
+}

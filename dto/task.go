@@ -44,3 +44,28 @@ type NewGetTaskResponse struct {
 	CreatedAt   time.Time             `json:"created_at"`
 	User        NewUserOnTaskResponse `json:"User"`
 }
+
+type NewUpdateTaskRequest struct {
+	Title       string `json:"title" binding:"required"`
+	Description string `json:"description" binding:"required"`
+}
+
+func (t *NewUpdateTaskRequest) UpdateTaskRequestToEntity(taskId int, userId int) entity.Task {
+	return entity.Task{
+		ID:          uint(taskId),
+		Title:       t.Title,
+		Description: t.Description,
+		UserID:      uint(userId),
+		UpdatedAt:   time.Now(),
+	}
+}
+
+type NewUpdateTaskResponse struct {
+	Id          int       `json:"id"`
+	Title       string    `json:"title"`
+	Description string    `json:"description"`
+	Status      bool      `json:"status"`
+	UserId      int       `json:"user_id"`
+	CategoryId  int       `json:"category_id"`
+	UpdatedAt   time.Time `json:"updated_at"`
+}

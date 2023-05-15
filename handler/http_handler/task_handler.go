@@ -76,3 +76,35 @@ func (t *taskHandler) GetTask(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (t *taskHandler) UpdateTask(ctx *gin.Context) {
+	param := ctx.Param("taskId")
+	taskId, errParam := strconv.Atoi(param)
+	if errParam != nil {
+		newErrParam := errs.NewBadRequestError("invalid task's id")
+		ctx.AbortWithStatusJSON(newErrParam.Status(), newErrParam)
+		return
+	}
+
+	var requestBody dto.NewUpdateTaskRequest
+	if errBinding := ctx.ShouldBindJSON(&requestBody); errBinding != nil {
+		errBinds := []string{}
+		for _, e := range errBinding.(validator.ValidationErrors) {
+			errBind := fmt.Sprintf("error on field %s, condition : %s", e.Field(), e.ActualTag())
+			errBinds = append(errBinds, errBind)
+		}
+		newErrBinds := errs.NewUnprocessableEntityError(errBinds)
+		ctx.AbortWithStatusJSON(newErrBinds.Status(), newErrBinds)
+		return
+	}
+
+	user := ctx.MustGet("user")
+
+	response, err := t.taskService.UpdateTask(requestBody, taskId, user)
+	if err != nil {
+		ctx.AbortWithStatusJSON(err.Status(), err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}

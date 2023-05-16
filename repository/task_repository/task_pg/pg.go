@@ -68,3 +68,13 @@ func (t *taskRepository) UpdateTasksStatus(payload entity.Task) (*entity.Task, e
 
 	return &payload, nil
 }
+
+func (t *taskRepository) UpdateTasksCategory(payload entity.Task) (*entity.Task, errs.MessageErr) {
+	err := t.db.Model(&payload).Clauses(clause.Returning{}).Where("id = ? AND user_id = ?", payload.ID, payload.UserID).Update("category_id", payload.CategoryID).Error
+
+	if err != nil {
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+
+	return &payload, nil
+}

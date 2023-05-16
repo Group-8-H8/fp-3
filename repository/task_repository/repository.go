@@ -11,4 +11,5 @@ type TaskRepository interface {
 	GetTask(taskId int, userId int) (*entity.Task, errs.MessageErr)
 	UpdateTask(payload entity.Task) (*entity.Task, errs.MessageErr)
 	UpdateTasksStatus(payload entity.Task) (*entity.Task, errs.MessageErr)
+	UpdateTasksCategory(payload entity.Task) (*entity.Task, errs.MessageErr)
 }

@@ -73,3 +73,7 @@ type NewUpdateTaskResponse struct {
 type NewUpdateTasksStatusRequest struct {
 	Status bool `json:"status" binding:"boolean"`
 }
+
+type NewUpdateTasksCategoryRequest struct {
+	CategoryId int `json:"category_id" binding:"required"`
+}

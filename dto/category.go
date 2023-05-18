@@ -47,7 +47,7 @@ type NewGetCategoriesResponse struct {
 	Type      string    `json:"type"`
 	UpdatedAt time.Time `json:"updated_at"`
 	CreatedAt time.Time `json:"created_at"`
-	Tasks     []entity.Task
+	Tasks     []NewGetTaskOnCategoriesEndpoint
 }
 
 type NewDeleteCategoryResponse struct {

@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/Group-8-H8/fp-3/dto"
+	"github.com/Group-8-H8/fp-3/entity"
 	"github.com/Group-8-H8/fp-3/pkg/errs"
 	"github.com/Group-8-H8/fp-3/repository/category_repository"
 )
@@ -9,8 +10,8 @@ import (
 type CategoryService interface {
 	CreateCategory(payload dto.NewCreateCategoryRequest) (*dto.NewCreateCategoryResponse, errs.MessageErr)
 	UpdateCategory(payload dto.NewUpdateCategoryRequest, categoryId uint) (*dto.NewUpdateCategoryResponse, errs.MessageErr)
-	GetCategories() ([]dto.NewGetCategoriesResponse, errs.MessageErr)
-	GetCategory(categoryId int) (*dto.NewGetCategoriesResponse, errs.MessageErr)
+	GetCategories(payloadUser any) ([]dto.NewGetCategoriesResponse, errs.MessageErr)
+	GetCategory(categoryId int, payloadUser any) (*dto.NewGetCategoriesResponse, errs.MessageErr)
 	DeleteCategory(categoryId int) (*dto.NewDeleteCategoryResponse, errs.MessageErr)
 }
 
@@ -60,7 +61,9 @@ func (c *categoryService) UpdateCategory(payload dto.NewUpdateCategoryRequest, c
 	return response, nil
 }
 
-func (c *categoryService) GetCategories() ([]dto.NewGetCategoriesResponse, errs.MessageErr) {
+func (c *categoryService) GetCategories(payloadUser any) ([]dto.NewGetCategoriesResponse, errs.MessageErr) {
+	user := payloadUser.(entity.User)
+
 	getCategories, err := c.categoryRepo.GetCategories()
 	if err != nil {
 		return nil, err
@@ -68,12 +71,18 @@ func (c *categoryService) GetCategories() ([]dto.NewGetCategoriesResponse, errs.
 
 	var responses []dto.NewGetCategoriesResponse
 	for _, e := range getCategories {
+		tasks := []entity.Task{}
+		for _, task := range e.Tasks {
+			if task.UserID == user.ID {
+				tasks = append(tasks, task)
+			}
+		}
 		response := dto.NewGetCategoriesResponse{
 			Id:        e.ID,
 			Type:      e.Type,
 			UpdatedAt: e.UpdatedAt,
 			CreatedAt: e.CreatedAt,
-			Tasks:     e.Tasks,
+			Tasks:     tasks,
 		}
 		responses = append(responses, response)
 	}
@@ -81,10 +90,19 @@ func (c *categoryService) GetCategories() ([]dto.NewGetCategoriesResponse, errs.
 	return responses, nil
 }
 
-func (c *categoryService) GetCategory(categoryId int) (*dto.NewGetCategoriesResponse, errs.MessageErr) {
+func (c *categoryService) GetCategory(categoryId int, payloadUser any) (*dto.NewGetCategoriesResponse, errs.MessageErr) {
+	user := payloadUser.(entity.User)
+
 	getCategory, err := c.categoryRepo.GetCategory(categoryId)
 	if err != nil {
 		return nil, err
+	}
+
+	tasks := []entity.Task{}
+	for _, task := range getCategory.Tasks {
+		if task.UserID == user.ID {
+			tasks = append(tasks, task)
+		}
 	}
 
 	response := &dto.NewGetCategoriesResponse{
@@ -92,7 +110,7 @@ func (c *categoryService) GetCategory(categoryId int) (*dto.NewGetCategoriesResp
 		Type:      getCategory.Type,
 		UpdatedAt: getCategory.UpdatedAt,
 		CreatedAt: getCategory.CreatedAt,
-		Tasks:     getCategory.Tasks,
+		Tasks:     tasks,
 	}
 
 	return response, nil

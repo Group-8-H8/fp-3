@@ -25,7 +25,13 @@ func (t *taskHandler) CreateTask(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
 		errBinds := []string{}
-		for _, e := range err.(validator.ValidationErrors) {
+		errCasting, ok := err.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("error on field %s, condition: %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}
@@ -89,7 +95,13 @@ func (t *taskHandler) UpdateTask(ctx *gin.Context) {
 	var requestBody dto.NewUpdateTaskRequest
 	if errBinding := ctx.ShouldBindJSON(&requestBody); errBinding != nil {
 		errBinds := []string{}
-		for _, e := range errBinding.(validator.ValidationErrors) {
+		errCasting, ok := errBinding.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("error on field %s, condition : %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}
@@ -122,7 +134,13 @@ func (t *taskHandler) UpdateTasksStatus(ctx *gin.Context) {
 
 	if errBinding := ctx.ShouldBindJSON(&requestBody); errBinding != nil {
 		errBinds := []string{}
-		for _, e := range errBinding.(validator.ValidationErrors) {
+		errCasting, ok := errBinding.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("error on field %s, condition : %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}
@@ -133,9 +151,9 @@ func (t *taskHandler) UpdateTasksStatus(ctx *gin.Context) {
 
 	user := ctx.MustGet("user")
 
-	response, errUpdated := t.taskService.UpdateTasksStatus(requestBody, taskId, user)
-	if errUpdated != nil {
-		ctx.AbortWithStatusJSON(errUpdated.Status(), errUpdated)
+	response, errResponse := t.taskService.UpdateTasksStatus(requestBody, taskId, user)
+	if errResponse != nil {
+		ctx.AbortWithStatusJSON(errResponse.Status(), errResponse)
 		return
 	}
 
@@ -155,7 +173,13 @@ func (t *taskHandler) UpdateTasksCategory(ctx *gin.Context) {
 
 	if errBinding := ctx.ShouldBindJSON(&requestBody); errBinding != nil {
 		errBinds := []string{}
-		for _, e := range errBinding.(validator.ValidationErrors) {
+		errCasting, ok := errBinding.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("error on field %s, condition : %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}

@@ -26,7 +26,13 @@ func (c *categoryHandler) CreateCategory(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
 		errBinds := []string{}
-		for _, e := range err.(validator.ValidationErrors) {
+		errCasting, ok := err.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("Error on field %s, condition: %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}
@@ -35,13 +41,13 @@ func (c *categoryHandler) CreateCategory(ctx *gin.Context) {
 		return
 	}
 
-	createdCategory, errCreate := c.categoryService.CreateCategory(requestBody)
-	if errCreate != nil {
-		ctx.AbortWithStatusJSON(errCreate.Status(), errCreate)
+	response, errResponse := c.categoryService.CreateCategory(requestBody)
+	if errResponse != nil {
+		ctx.AbortWithStatusJSON(errResponse.Status(), errResponse)
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, createdCategory)
+	ctx.JSON(http.StatusCreated, response)
 }
 
 func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
@@ -49,7 +55,13 @@ func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
 		errBinds := []string{}
-		for _, e := range err.(validator.ValidationErrors) {
+		errCasting, ok := err.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("Error on field %s, condition: %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}
@@ -67,13 +79,13 @@ func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
 	}
 	categoryId := uint(u64)
 
-	updatedCategory, errUpdated := c.categoryService.UpdateCategory(requestBody, categoryId)
-	if errUpdated != nil {
-		ctx.AbortWithStatusJSON(errUpdated.Status(), errUpdated)
+	response, errResponse := c.categoryService.UpdateCategory(requestBody, categoryId)
+	if errResponse != nil {
+		ctx.AbortWithStatusJSON(errResponse.Status(), errResponse)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, updatedCategory)
+	ctx.JSON(http.StatusOK, response)
 }
 
 func (c *categoryHandler) GetCategories(ctx *gin.Context) {

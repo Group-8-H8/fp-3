@@ -77,3 +77,7 @@ type NewUpdateTasksStatusRequest struct {
 type NewUpdateTasksCategoryRequest struct {
 	CategoryId int `json:"category_id" binding:"required"`
 }
+
+type NewDeleteTaskResponse struct {
+	Message string `json:"message"`
+}

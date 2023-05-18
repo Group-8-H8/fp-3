@@ -78,3 +78,13 @@ func (t *taskRepository) UpdateTasksCategory(payload entity.Task) (*entity.Task,
 
 	return &payload, nil
 }
+
+func (t *taskRepository) DeleteTask(taskId int, userId int) errs.MessageErr {
+	task := entity.Task{}
+
+	if err := t.db.Where("id = ? AND user_id = ?", taskId, userId).Delete(&task).Error; err != nil {
+		return errs.NewInternalServerError("something went wrong")
+	}
+
+	return nil
+}

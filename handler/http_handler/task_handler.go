@@ -174,3 +174,23 @@ func (t *taskHandler) UpdateTasksCategory(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, response)
 }
+
+func (t *taskHandler) DeleteTask(ctx *gin.Context) {
+	param := ctx.Param("taskId")
+	taskId, errConv := strconv.Atoi(param)
+	if errConv != nil {
+		newErrConv := errs.NewBadRequestError("invalid task's id")
+		ctx.AbortWithStatusJSON(newErrConv.Status(), newErrConv)
+		return
+	}
+
+	user := ctx.MustGet("user")
+
+	response, errDel := t.taskService.DeleteTask(taskId, user)
+	if errDel != nil {
+		ctx.AbortWithStatusJSON(errDel.Status(), errDel)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, response)
+}

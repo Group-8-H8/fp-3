@@ -18,6 +18,7 @@ type TaskService interface {
 	UpdateTask(payload dto.NewUpdateTaskRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr)
 	UpdateTasksStatus(payload dto.NewUpdateTasksStatusRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr)
 	UpdateTasksCategory(payload dto.NewUpdateTasksCategoryRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr)
+	DeleteTask(taskId int, payloadUser any) (*dto.NewDeleteTaskResponse, errs.MessageErr)
 }
 
 type taskService struct {
@@ -213,6 +214,24 @@ func (t *taskService) UpdateTasksCategory(payload dto.NewUpdateTasksCategoryRequ
 		UserId:      int(updatedTask.UserID),
 		CategoryId:  int(updatedTask.CategoryID),
 		UpdatedAt:   updatedTask.UpdatedAt,
+	}
+
+	return response, nil
+}
+
+func (t *taskService) DeleteTask(taskId int, payloadUser any) (*dto.NewDeleteTaskResponse, errs.MessageErr) {
+	user := payloadUser.(entity.User)
+
+	if _, errCheck := t.taskRepo.GetTask(taskId, int(user.ID)); errCheck != nil && errCheck.Status() == 404 {
+		return nil, errCheck
+	}
+
+	if errDel := t.taskRepo.DeleteTask(taskId, int(user.ID)); errDel != nil {
+		return nil, errDel
+	}
+
+	response := &dto.NewDeleteTaskResponse{
+		Message: "Task has been sucessfully deleted",
 	}
 
 	return response, nil

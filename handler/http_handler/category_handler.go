@@ -77,7 +77,9 @@ func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
 }
 
 func (c *categoryHandler) GetCategories(ctx *gin.Context) {
-	response, err := c.categoryService.GetCategories()
+	user := ctx.MustGet("user")
+
+	response, err := c.categoryService.GetCategories(user)
 	if err != nil {
 		ctx.AbortWithStatusJSON(err.Status(), err)
 		return
@@ -96,7 +98,9 @@ func (c *categoryHandler) GetCategory(ctx *gin.Context) {
 		return
 	}
 
-	response, errGet := c.categoryService.GetCategory(id)
+	user := ctx.MustGet("user")
+
+	response, errGet := c.categoryService.GetCategory(id, user)
 	if errGet != nil {
 		ctx.AbortWithStatusJSON(errGet.Status(), errGet)
 		return

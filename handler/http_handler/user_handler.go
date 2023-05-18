@@ -26,7 +26,13 @@ func (u *userHandler) Register(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
 		errBinds := []string{}
-		for _, e := range err.(validator.ValidationErrors) {
+		errCasting, ok := err.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("Error on field %s, condition: %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}
@@ -35,9 +41,9 @@ func (u *userHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	createdUser, err := u.userService.Register(requestBody)
-	if err != nil {
-		ctx.AbortWithStatusJSON(err.Status(), err)
+	createdUser, errResponse := u.userService.Register(requestBody)
+	if errResponse != nil {
+		ctx.AbortWithStatusJSON(errResponse.Status(), errResponse)
 		return
 	}
 
@@ -49,7 +55,13 @@ func (u *userHandler) Login(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&requestBody); err != nil {
 		errBinds := []string{}
-		for _, e := range err.(validator.ValidationErrors) {
+		errCasting, ok := err.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("Error on field %s, condition: %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}
@@ -59,9 +71,9 @@ func (u *userHandler) Login(ctx *gin.Context) {
 		return
 	}
 
-	token, err := u.userService.Login(requestBody)
-	if err != nil {
-		ctx.AbortWithStatusJSON(err.Status(), err)
+	token, errResponse := u.userService.Login(requestBody)
+	if errResponse != nil {
+		ctx.AbortWithStatusJSON(errResponse.Status(), errResponse)
 		return
 	}
 
@@ -75,7 +87,13 @@ func (u *userHandler) UpdateAccount(ctx *gin.Context) {
 
 	if err := ctx.ShouldBindJSON(&bodyRequest); err != nil {
 		errBinds := []string{}
-		for _, e := range err.(validator.ValidationErrors) {
+		errCasting, ok := err.(validator.ValidationErrors)
+		if !ok {
+			newErrBind := errs.NewBadRequestError("invalid body request")
+			ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
+			return
+		}
+		for _, e := range errCasting {
 			errBind := fmt.Sprintf("error on field %s, condition: %s", e.Field(), e.ActualTag())
 			errBinds = append(errBinds, errBind)
 		}
@@ -83,9 +101,9 @@ func (u *userHandler) UpdateAccount(ctx *gin.Context) {
 		ctx.AbortWithStatusJSON(newErrBind.Status(), newErrBind)
 	}
 
-	response, err := u.userService.UpdateAccount(bodyRequest, user.ID)
-	if err != nil {
-		ctx.AbortWithStatusJSON(err.Status(), err)
+	response, errResponse := u.userService.UpdateAccount(bodyRequest, user.ID)
+	if errResponse != nil {
+		ctx.AbortWithStatusJSON(errResponse.Status(), errResponse)
 		return
 	}
 

@@ -71,10 +71,19 @@ func (c *categoryService) GetCategories(payloadUser any) ([]dto.NewGetCategories
 
 	var responses []dto.NewGetCategoriesResponse
 	for _, e := range getCategories {
-		tasks := []entity.Task{}
-		for _, task := range e.Tasks {
-			if task.UserID == user.ID {
-				tasks = append(tasks, task)
+		tasksResponse := []dto.NewGetTaskOnCategoriesEndpoint{}
+		for _, tasks := range e.Tasks {
+			if tasks.UserID == user.ID {
+				task := dto.NewGetTaskOnCategoriesEndpoint{
+					Id:          int(tasks.ID),
+					Title:       tasks.Title,
+					Description: tasks.Description,
+					UserId:      int(tasks.UserID),
+					CategoryId:  int(tasks.CategoryID),
+					CreatedAt:   tasks.CreatedAt,
+					UpdatedAt:   tasks.UpdatedAt,
+				}
+				tasksResponse = append(tasksResponse, task)
 			}
 		}
 		response := dto.NewGetCategoriesResponse{
@@ -82,7 +91,7 @@ func (c *categoryService) GetCategories(payloadUser any) ([]dto.NewGetCategories
 			Type:      e.Type,
 			UpdatedAt: e.UpdatedAt,
 			CreatedAt: e.CreatedAt,
-			Tasks:     tasks,
+			Tasks:     tasksResponse,
 		}
 		responses = append(responses, response)
 	}
@@ -98,10 +107,19 @@ func (c *categoryService) GetCategory(categoryId int, payloadUser any) (*dto.New
 		return nil, err
 	}
 
-	tasks := []entity.Task{}
-	for _, task := range getCategory.Tasks {
-		if task.UserID == user.ID {
-			tasks = append(tasks, task)
+	tasksResponse := []dto.NewGetTaskOnCategoriesEndpoint{}
+	for _, tasks := range getCategory.Tasks {
+		if tasks.UserID == user.ID {
+			task := dto.NewGetTaskOnCategoriesEndpoint{
+				Id:          int(tasks.ID),
+				Title:       tasks.Title,
+				Description: tasks.Description,
+				UserId:      int(tasks.UserID),
+				CategoryId:  int(tasks.CategoryID),
+				CreatedAt:   tasks.CreatedAt,
+				UpdatedAt:   tasks.UpdatedAt,
+			}
+			tasksResponse = append(tasksResponse, task)
 		}
 	}
 
@@ -110,7 +128,7 @@ func (c *categoryService) GetCategory(categoryId int, payloadUser any) (*dto.New
 		Type:      getCategory.Type,
 		UpdatedAt: getCategory.UpdatedAt,
 		CreatedAt: getCategory.CreatedAt,
-		Tasks:     tasks,
+		Tasks:     tasksResponse,
 	}
 
 	return response, nil

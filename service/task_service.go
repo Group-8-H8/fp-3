@@ -1,6 +1,8 @@
 package service
 
 import (
+	"time"
+
 	"github.com/Group-8-H8/fp-3/dto"
 	"github.com/Group-8-H8/fp-3/entity"
 	"github.com/Group-8-H8/fp-3/pkg/errs"
@@ -14,6 +16,8 @@ type TaskService interface {
 	GetTasks(payload any) ([]dto.NewGetTaskResponse, errs.MessageErr)
 	GetTask(taskId int, payloadUser any) (*dto.NewGetTaskResponse, errs.MessageErr)
 	UpdateTask(payload dto.NewUpdateTaskRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr)
+	UpdateTasksStatus(payload dto.NewUpdateTasksStatusRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr)
+	UpdateTasksCategory(payload dto.NewUpdateTasksCategoryRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr)
 }
 
 type taskService struct {
@@ -131,6 +135,74 @@ func (t *taskService) UpdateTask(payload dto.NewUpdateTaskRequest, taskId int, p
 	updatedTask, err := t.taskRepo.UpdateTask(task)
 	if err != nil {
 		return nil, err
+	}
+
+	response := &dto.NewUpdateTaskResponse{
+		Id:          int(updatedTask.ID),
+		Title:       updatedTask.Title,
+		Description: updatedTask.Description,
+		Status:      updatedTask.Status,
+		UserId:      int(updatedTask.UserID),
+		CategoryId:  int(updatedTask.CategoryID),
+		UpdatedAt:   updatedTask.UpdatedAt,
+	}
+
+	return response, nil
+}
+
+func (t *taskService) UpdateTasksStatus(payload dto.NewUpdateTasksStatusRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr) {
+	user := payloadUser.(entity.User)
+
+	task := entity.Task{
+		ID:        uint(taskId),
+		Status:    payload.Status,
+		UserID:    uint(user.ID),
+		UpdatedAt: time.Now(),
+	}
+
+	if _, errCheck := t.taskRepo.GetTask(taskId, int(user.ID)); errCheck != nil && errCheck.Status() == 404 {
+		return nil, errCheck
+	}
+
+	updatedTask, err := t.taskRepo.UpdateTasksStatus(task)
+	if err != nil {
+		return nil, err
+	}
+
+	response := &dto.NewUpdateTaskResponse{
+		Id:          int(updatedTask.ID),
+		Title:       updatedTask.Title,
+		Description: updatedTask.Description,
+		Status:      updatedTask.Status,
+		UserId:      int(updatedTask.UserID),
+		CategoryId:  int(updatedTask.CategoryID),
+		UpdatedAt:   updatedTask.UpdatedAt,
+	}
+
+	return response, nil
+}
+
+func (t *taskService) UpdateTasksCategory(payload dto.NewUpdateTasksCategoryRequest, taskId int, payloadUser any) (*dto.NewUpdateTaskResponse, errs.MessageErr) {
+	user := payloadUser.(entity.User)
+
+	if _, errCheck := t.taskRepo.GetTask(taskId, int(user.ID)); errCheck != nil && errCheck.Status() == 404 {
+		return nil, errCheck
+	}
+
+	if _, errCat := t.categoryRepo.GetCategory(payload.CategoryId); errCat != nil && errCat.Status() == 404 {
+		return nil, errCat
+	}
+
+	task := entity.Task{
+		ID:         uint(taskId),
+		CategoryID: uint(payload.CategoryId),
+		UserID:     user.ID,
+		UpdatedAt:  time.Now(),
+	}
+
+	updatedTask, errUpdate := t.taskRepo.UpdateTasksCategory(task)
+	if errUpdate != nil {
+		return nil, errUpdate
 	}
 
 	response := &dto.NewUpdateTaskResponse{

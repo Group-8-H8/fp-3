@@ -9,7 +9,7 @@ import (
 type NewCreateTaskRequest struct {
 	Title       string `json:"title" binding:"required"`
 	Description string `json:"description" binding:"required"`
-	CategoryId  int    `json:"category_id" binding:"number"`
+	CategoryId  int    `json:"category_id" binding:"required,number"`
 }
 
 func (t *NewCreateTaskRequest) CreateTaskRequestToEntity(userId int) entity.Task {
@@ -68,4 +68,12 @@ type NewUpdateTaskResponse struct {
 	UserId      int       `json:"user_id"`
 	CategoryId  int       `json:"category_id"`
 	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+type NewUpdateTasksStatusRequest struct {
+	Status bool `json:"status" binding:"boolean"`
+}
+
+type NewUpdateTasksCategoryRequest struct {
+	CategoryId int `json:"category_id" binding:"required"`
 }

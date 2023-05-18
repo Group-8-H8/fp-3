@@ -61,6 +61,8 @@ func StartApp() {
 		taskRoute.GET("/", taskHandler.GetTasks)
 		taskRoute.GET("/:taskId", taskHandler.GetTask)
 		taskRoute.PUT("/:taskId", taskHandler.UpdateTask)
+		taskRoute.PATCH("/update-status/:taskId", taskHandler.UpdateTasksStatus)
+		taskRoute.PATCH("/update-category/:taskId", taskHandler.UpdateTasksCategory)
 	}
 
 	if PORT = os.Getenv("PORT"); PORT == "" {

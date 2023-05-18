@@ -7,6 +7,7 @@ import (
 	"github.com/Group-8-H8/fp-3/pkg/errs"
 	"github.com/Group-8-H8/fp-3/repository/task_repository"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type taskRepository struct {
@@ -50,6 +51,26 @@ func (t *taskRepository) GetTask(taskId int, userId int) (*entity.Task, errs.Mes
 
 func (t *taskRepository) UpdateTask(payload entity.Task) (*entity.Task, errs.MessageErr) {
 	err := t.db.Model(&payload).Where("id = ? AND user_id = ?", payload.ID, payload.UserID).Updates(entity.Task{Title: payload.Title, Description: payload.Description, UpdatedAt: payload.UpdatedAt}).Error
+
+	if err != nil {
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+
+	return &payload, nil
+}
+
+func (t *taskRepository) UpdateTasksStatus(payload entity.Task) (*entity.Task, errs.MessageErr) {
+	err := t.db.Model(&payload).Clauses(clause.Returning{}).Where("id = ? AND user_id = ?", payload.ID, payload.UserID).Update("status", payload.Status).Error
+
+	if err != nil {
+		return nil, errs.NewInternalServerError("something went wrong")
+	}
+
+	return &payload, nil
+}
+
+func (t *taskRepository) UpdateTasksCategory(payload entity.Task) (*entity.Task, errs.MessageErr) {
+	err := t.db.Model(&payload).Clauses(clause.Returning{}).Where("id = ? AND user_id = ?", payload.ID, payload.UserID).Update("category_id", payload.CategoryID).Error
 
 	if err != nil {
 		return nil, errs.NewInternalServerError("something went wrong")

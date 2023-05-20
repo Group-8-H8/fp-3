@@ -1,0 +1,138 @@
+definitions:
+  dto.NewDeleteAccountResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.NewLoginRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.NewLoginResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  dto.NewRegisterRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      password:
+        minLength: 6
+        type: string
+    required:
+    - email
+    - full_name
+    - password
+    type: object
+  dto.NewRegisterResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+    type: object
+  dto.NewUpdateAccountResponse:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
+      updated_at:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /users/delete-account:
+    delete:
+      description: Delete an account
+      operationId: delete-account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewDeleteAccountResponse'
+      summary: Delete Account
+      tags:
+      - user
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Login registered account to get the token
+      operationId: login-account
+      parameters:
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewLoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewLoginResponse'
+      summary: Login Registered Account
+      tags:
+      - user
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new account
+      operationId: register-new-account
+      parameters:
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewRegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.NewRegisterResponse'
+      summary: Create Account
+      tags:
+      - user
+  /users/update-account:
+    put:
+      consumes:
+      - application/json
+      description: Update account's fullname and email
+      operationId: update-account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewUpdateAccountResponse'
+      summary: Update Account
+      tags:
+      - user
+swagger: "2.0"

@@ -21,6 +21,16 @@ func NewUserHandler(userService service.UserService) userHandler {
 	return userHandler{userService: userService}
 }
 
+// RegisterNewAccount godoc
+// @Summary Create Account
+// @Description Create a new account
+// @Tags user
+// @ID register-new-account
+// @Accept json
+// @Produce json
+// @Param RequestBody body dto.NewRegisterRequest true "request body json"
+// @Success 201 {object} dto.NewRegisterResponse
+// @Router /users/register [post]
 func (u *userHandler) Register(ctx *gin.Context) {
 	var requestBody dto.NewRegisterRequest
 
@@ -50,6 +60,16 @@ func (u *userHandler) Register(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, createdUser)
 }
 
+// LoginAccount godoc
+// @Summary Login Registered Account
+// @Description Login registered account to get the token
+// @Tags user
+// @ID login-account
+// @Accept json
+// @Produce json
+// @Param RequestBody body dto.NewLoginRequest true "request body json"
+// @Success 200 {object} dto.NewLoginResponse
+// @Router /users/login [post]
 func (u *userHandler) Login(ctx *gin.Context) {
 	var requestBody dto.NewLoginRequest
 
@@ -80,6 +100,15 @@ func (u *userHandler) Login(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, token)
 }
 
+// UpdateAccount godoc
+// @Summary Update Account
+// @Description Update account's fullname and email
+// @Tags user
+// @ID update-account
+// @Accept json
+// @Produce json
+// @Success 200 {object} dto.NewUpdateAccountResponse
+// @Router /users/update-account [put]
 func (u *userHandler) UpdateAccount(ctx *gin.Context) {
 	user := ctx.MustGet("user").(entity.User)
 
@@ -110,6 +139,14 @@ func (u *userHandler) UpdateAccount(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// DeleteAccount godoc
+// @Summary Delete Account
+// @Description Delete an account
+// @Tags user
+// @ID delete-account
+// @Produce json
+// @Success 200 {object} dto.NewDeleteAccountResponse
+// @Router /users/delete-account [delete]
 func (u *userHandler) DeleteAccount(ctx *gin.Context) {
 	user := ctx.MustGet("user").(entity.User)
 

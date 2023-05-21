@@ -21,6 +21,16 @@ func NewCategoryHandler(categoryService service.CategoryService) categoryHandler
 	return categoryHandler{categoryService: categoryService}
 }
 
+// CreateCategory godoc
+// @Summary Create Category
+// @Description Create a new category
+// @Tags category
+// @ID create-new-category
+// @Accept json
+// @Produce json
+// @Param RequestBody body dto.NewCreateCategoryRequest true "request body json"
+// @Success 201 {object} dto.NewCreateCategoryResponse
+// @Router /categories [post]
 func (c *categoryHandler) CreateCategory(ctx *gin.Context) {
 	var requestBody dto.NewCreateCategoryRequest
 
@@ -50,6 +60,16 @@ func (c *categoryHandler) CreateCategory(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
+// UpdateCategory godoc
+// @Summary Update Category
+// @Description Update category name
+// @Tags category
+// @ID update-category
+// @Accept json
+// @Produce json
+// @Param RequestBody body dto.NewUpdateCategoryRequest true "request body json"
+// @Success 200 {object} dto.NewUpdateCategoryResponse
+// @Router /categories/{categoryId} [patch]
 func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
 	var requestBody dto.NewUpdateCategoryRequest
 
@@ -88,6 +108,14 @@ func (c *categoryHandler) UpdateCategory(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// GetAllCategories godoc
+// @Summary Get All Categories
+// @Description Get all categories
+// @Tags category
+// @ID get-all-category
+// @Produce json
+// @Success 200 {object} []dto.NewGetCategoriesResponse
+// @Router /categories [get]
 func (c *categoryHandler) GetCategories(ctx *gin.Context) {
 	user := ctx.MustGet("user")
 
@@ -100,6 +128,14 @@ func (c *categoryHandler) GetCategories(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// GetCategory godoc
+// @Summary Get Category
+// @Description Get category by categories ID
+// @Tags category
+// @ID get-category
+// @Produce json
+// @Success 200 {object} dto.NewGetCategoriesResponse
+// @Router /categories/{categoryId} [get]
 func (c *categoryHandler) GetCategory(ctx *gin.Context) {
 	categoryId := ctx.Param("categoryId")
 
@@ -121,6 +157,14 @@ func (c *categoryHandler) GetCategory(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// DeleteCategory godoc
+// @Summary Delete Category
+// @Description Delete Category
+// @Tags category
+// @ID delete-category
+// @Produce json
+// @Success 200 {object} dto.NewDeleteCategoryResponse
+// @Router /categories/{categoryId} [delete]
 func (c *categoryHandler) DeleteCategory(ctx *gin.Context) {
 	param := ctx.Param("categoryId")
 	categoryId, errConv := strconv.Atoi(param)

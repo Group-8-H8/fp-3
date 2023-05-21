@@ -67,6 +67,7 @@ func (c *categoryHandler) CreateCategory(ctx *gin.Context) {
 // @ID update-category
 // @Accept json
 // @Produce json
+// @Param categoryId path int true "Id of the category"
 // @Param RequestBody body dto.NewUpdateCategoryRequest true "request body json"
 // @Success 200 {object} dto.NewUpdateCategoryResponse
 // @Router /categories/{categoryId} [patch]
@@ -134,6 +135,7 @@ func (c *categoryHandler) GetCategories(ctx *gin.Context) {
 // @Tags category
 // @ID get-category
 // @Produce json
+// @Param categoryId path int true "Id of the category"
 // @Success 200 {object} dto.NewGetCategoriesResponse
 // @Router /categories/{categoryId} [get]
 func (c *categoryHandler) GetCategory(ctx *gin.Context) {
@@ -163,6 +165,7 @@ func (c *categoryHandler) GetCategory(ctx *gin.Context) {
 // @Tags category
 // @ID delete-category
 // @Produce json
+// @Param categoryId path int true "Id of the category"
 // @Success 200 {object} dto.NewDeleteCategoryResponse
 // @Router /categories/{categoryId} [delete]
 func (c *categoryHandler) DeleteCategory(ctx *gin.Context) {

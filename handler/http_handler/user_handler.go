@@ -107,6 +107,7 @@ func (u *userHandler) Login(ctx *gin.Context) {
 // @ID update-account
 // @Accept json
 // @Produce json
+// @Param requestBody body dto.NewUpdateAccountRequest true "request body json"
 // @Success 200 {object} dto.NewUpdateAccountResponse
 // @Router /users/update-account [put]
 func (u *userHandler) UpdateAccount(ctx *gin.Context) {

@@ -20,6 +20,16 @@ func NewTaskHandler(taskService service.TaskService) taskHandler {
 	return taskHandler{taskService: taskService}
 }
 
+// CreateTask godoc
+// @Summary Create Task
+// @Description Create a new task
+// @Tags task
+// @ID create-new-task
+// @Accept json
+// @Produce json
+// @Param RequestBody body dto.NewCreateTaskRequest true "request body json"
+// @Success 201 {object} dto.NewCreateTaskResponse
+// @Router /tasks [post]
 func (t *taskHandler) CreateTask(ctx *gin.Context) {
 	var requestBody dto.NewCreateTaskRequest
 
@@ -51,6 +61,14 @@ func (t *taskHandler) CreateTask(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, response)
 }
 
+// GetAllTasks godoc
+// @Summary Get All Tasks
+// @Description Get all tasks
+// @Tags task
+// @ID get-all-task
+// @Produce json
+// @Success 200 {object} []dto.NewGetTaskResponse
+// @Router /tasks [get]
 func (t *taskHandler) GetTasks(ctx *gin.Context) {
 	user := ctx.MustGet("user")
 
@@ -63,6 +81,15 @@ func (t *taskHandler) GetTasks(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// GetTasksById godoc
+// @Summary Get Task By ID
+// @Description Get task by task's ID
+// @Tags task
+// @ID get-task-by-id
+// @Produce json
+// @Param taskId path int true "Id of the task"
+// @Success 200 {object} dto.NewGetTaskResponse
+// @Router /tasks/{taskId} [get]
 func (t *taskHandler) GetTask(ctx *gin.Context) {
 	user := ctx.MustGet("user")
 
@@ -83,6 +110,17 @@ func (t *taskHandler) GetTask(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// UpdateTask godoc
+// @Summary Update Task
+// @Description Update task's detail
+// @Tags task
+// @ID update-task
+// @Accept json
+// @Produce json
+// @Param taskId path int true "Id of the task"
+// @Param requestBody body dto.NewUpdateTaskRequest true "request body json"
+// @Success 200 {object} dto.NewUpdateTaskResponse
+// @Router /tasks/{taskId} [put]
 func (t *taskHandler) UpdateTask(ctx *gin.Context) {
 	param := ctx.Param("taskId")
 	taskId, errParam := strconv.Atoi(param)
@@ -121,6 +159,17 @@ func (t *taskHandler) UpdateTask(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// UpdateTasksStatus godoc
+// @Summary Update Task's Status
+// @Description Update task's status
+// @Tags task
+// @ID update-tasks-status
+// @Accept json
+// @Produce json
+// @Param taskId path int true "Id of the task"
+// @Param requestBody body dto.NewUpdateTasksStatusRequest true "request body json"
+// @Success 200 {object} dto.NewUpdateTaskResponse
+// @Router /tasks/update-status/{taskId} [patch]
 func (t *taskHandler) UpdateTasksStatus(ctx *gin.Context) {
 	param := ctx.Param("taskId")
 	taskId, errConv := strconv.Atoi(param)
@@ -160,6 +209,17 @@ func (t *taskHandler) UpdateTasksStatus(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// UpdateTasksCategory godoc
+// @Summary Update Task's Category
+// @Description Update task's category
+// @Tags task
+// @ID update-tasks-category
+// @Accept json
+// @Produce json
+// @Param taskId path int true "Id of the task"
+// @Param requestBody body dto.NewUpdateTasksCategoryRequest true "request body json"
+// @Success 200 {object} dto.NewUpdateTaskResponse
+// @Router /tasks/update-category/{taskId} [patch]
 func (t *taskHandler) UpdateTasksCategory(ctx *gin.Context) {
 	param := ctx.Param("taskId")
 	taskId, errConv := strconv.Atoi(param)
@@ -199,6 +259,15 @@ func (t *taskHandler) UpdateTasksCategory(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, response)
 }
 
+// DeleteTask godoc
+// @Summary Delete Task
+// @Description Delete task by task's ID
+// @Tags task
+// @ID delete-task
+// @Produce json
+// @Param taskId path int true "Id of the task"
+// @Success 200 {object} dto.NewDeleteTaskResponse
+// @Router /tasks/{taskId} [delete]
 func (t *taskHandler) DeleteTask(ctx *gin.Context) {
 	param := ctx.Param("taskId")
 	taskId, errConv := strconv.Atoi(param)

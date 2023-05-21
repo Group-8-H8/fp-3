@@ -15,12 +15,47 @@ definitions:
       type:
         type: string
     type: object
+  dto.NewCreateTaskRequest:
+    properties:
+      category_id:
+        type: integer
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - category_id
+    - description
+    - title
+    type: object
+  dto.NewCreateTaskResponse:
+    properties:
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: boolean
+      title:
+        type: string
+      user_id:
+        type: integer
+    type: object
   dto.NewDeleteAccountResponse:
     properties:
       message:
         type: string
     type: object
   dto.NewDeleteCategoryResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.NewDeleteTaskResponse:
     properties:
       message:
         type: string
@@ -53,6 +88,25 @@ definitions:
       title:
         type: string
       updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  dto.NewGetTaskResponse:
+    properties:
+      User:
+        $ref: '#/definitions/dto.NewUserOnTaskResponse'
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: boolean
+      title:
         type: string
       user_id:
         type: integer
@@ -98,6 +152,16 @@ definitions:
       id:
         type: integer
     type: object
+  dto.NewUpdateAccountRequest:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+    required:
+    - email
+    - full_name
+    type: object
   dto.NewUpdateAccountResponse:
     properties:
       email:
@@ -124,6 +188,54 @@ definitions:
         type: string
       updated_at:
         type: string
+    type: object
+  dto.NewUpdateTaskRequest:
+    properties:
+      description:
+        type: string
+      title:
+        type: string
+    required:
+    - description
+    - title
+    type: object
+  dto.NewUpdateTaskResponse:
+    properties:
+      category_id:
+        type: integer
+      description:
+        type: string
+      id:
+        type: integer
+      status:
+        type: boolean
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
+    type: object
+  dto.NewUpdateTasksCategoryRequest:
+    properties:
+      category_id:
+        type: integer
+    required:
+    - category_id
+    type: object
+  dto.NewUpdateTasksStatusRequest:
+    properties:
+      status:
+        type: boolean
+    type: object
+  dto.NewUserOnTaskResponse:
+    properties:
+      email:
+        type: string
+      full_name:
+        type: string
+      id:
+        type: integer
     type: object
 info:
   contact: {}
@@ -170,6 +282,12 @@ paths:
     delete:
       description: Delete Category
       operationId: delete-category
+      parameters:
+      - description: Id of the category
+        in: path
+        name: categoryId
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -183,6 +301,12 @@ paths:
     get:
       description: Get category by categories ID
       operationId: get-category
+      parameters:
+      - description: Id of the category
+        in: path
+        name: categoryId
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -199,6 +323,11 @@ paths:
       description: Update category name
       operationId: update-category
       parameters:
+      - description: Id of the category
+        in: path
+        name: categoryId
+        required: true
+        type: integer
       - description: request body json
         in: body
         name: RequestBody
@@ -215,6 +344,166 @@ paths:
       summary: Update Category
       tags:
       - category
+  /tasks:
+    get:
+      description: Get all tasks
+      operationId: get-all-task
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.NewGetTaskResponse'
+            type: array
+      summary: Get All Tasks
+      tags:
+      - task
+    post:
+      consumes:
+      - application/json
+      description: Create a new task
+      operationId: create-new-task
+      parameters:
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewCreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.NewCreateTaskResponse'
+      summary: Create Task
+      tags:
+      - task
+  /tasks/{taskId}:
+    delete:
+      description: Delete task by task's ID
+      operationId: delete-task
+      parameters:
+      - description: Id of the task
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewDeleteTaskResponse'
+      summary: Delete Task
+      tags:
+      - task
+    get:
+      description: Get task by task's ID
+      operationId: get-task-by-id
+      parameters:
+      - description: Id of the task
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewGetTaskResponse'
+      summary: Get Task By ID
+      tags:
+      - task
+    put:
+      consumes:
+      - application/json
+      description: Update task's detail
+      operationId: update-task
+      parameters:
+      - description: Id of the task
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      - description: request body json
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewUpdateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewUpdateTaskResponse'
+      summary: Update Task
+      tags:
+      - task
+  /tasks/update-category/{taskId}:
+    patch:
+      consumes:
+      - application/json
+      description: Update task's category
+      operationId: update-tasks-category
+      parameters:
+      - description: Id of the task
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      - description: request body json
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewUpdateTasksCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewUpdateTaskResponse'
+      summary: Update Task's Category
+      tags:
+      - task
+  /tasks/update-status/{taskId}:
+    patch:
+      consumes:
+      - application/json
+      description: Update task's status
+      operationId: update-tasks-status
+      parameters:
+      - description: Id of the task
+        in: path
+        name: taskId
+        required: true
+        type: integer
+      - description: request body json
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewUpdateTasksStatusRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewUpdateTaskResponse'
+      summary: Update Task's Status
+      tags:
+      - task
   /users/delete-account:
     delete:
       description: Delete an account
@@ -281,6 +570,13 @@ paths:
       - application/json
       description: Update account's fullname and email
       operationId: update-account
+      parameters:
+      - description: request body json
+        in: body
+        name: requestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewUpdateAccountRequest'
       produces:
       - application/json
       responses:

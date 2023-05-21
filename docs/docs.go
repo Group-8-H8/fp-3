@@ -84,6 +84,15 @@ const docTemplate = `{
                 ],
                 "summary": "Get Category",
                 "operationId": "get-category",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the category",
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -103,6 +112,15 @@ const docTemplate = `{
                 ],
                 "summary": "Delete Category",
                 "operationId": "delete-category",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the category",
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -127,6 +145,13 @@ const docTemplate = `{
                 "operationId": "update-category",
                 "parameters": [
                     {
+                        "type": "integer",
+                        "description": "Id of the category",
+                        "name": "categoryId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
                         "description": "request body json",
                         "name": "RequestBody",
                         "in": "body",
@@ -141,6 +166,245 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/dto.NewUpdateCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks": {
+            "get": {
+                "description": "Get all tasks",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "task"
+                ],
+                "summary": "Get All Tasks",
+                "operationId": "get-all-task",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.NewGetTaskResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new task",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "task"
+                ],
+                "summary": "Create Task",
+                "operationId": "create-new-task",
+                "parameters": [
+                    {
+                        "description": "request body json",
+                        "name": "RequestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewCreateTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewCreateTaskResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/update-category/{taskId}": {
+            "patch": {
+                "description": "Update task's category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "task"
+                ],
+                "summary": "Update Task's Category",
+                "operationId": "update-tasks-category",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the task",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request body json",
+                        "name": "requestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateTasksCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateTaskResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/update-status/{taskId}": {
+            "patch": {
+                "description": "Update task's status",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "task"
+                ],
+                "summary": "Update Task's Status",
+                "operationId": "update-tasks-status",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the task",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request body json",
+                        "name": "requestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateTasksStatusRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateTaskResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/tasks/{taskId}": {
+            "get": {
+                "description": "Get task by task's ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "task"
+                ],
+                "summary": "Get Task By ID",
+                "operationId": "get-task-by-id",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the task",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewGetTaskResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "description": "Update task's detail",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "task"
+                ],
+                "summary": "Update Task",
+                "operationId": "update-task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the task",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "request body json",
+                        "name": "requestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateTaskRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateTaskResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete task by task's ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "task"
+                ],
+                "summary": "Delete Task",
+                "operationId": "delete-task",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id of the task",
+                        "name": "taskId",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewDeleteTaskResponse"
                         }
                     }
                 }
@@ -251,6 +515,17 @@ const docTemplate = `{
                 ],
                 "summary": "Update Account",
                 "operationId": "update-account",
+                "parameters": [
+                    {
+                        "description": "request body json",
+                        "name": "requestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateAccountRequest"
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
@@ -288,6 +563,51 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.NewCreateTaskRequest": {
+            "type": "object",
+            "required": [
+                "category_id",
+                "description",
+                "title"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NewCreateTaskResponse": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
         "dto.NewDeleteAccountResponse": {
             "type": "object",
             "properties": {
@@ -297,6 +617,14 @@ const docTemplate = `{
             }
         },
         "dto.NewDeleteCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NewDeleteTaskResponse": {
             "type": "object",
             "properties": {
                 "message": {
@@ -346,6 +674,35 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.NewGetTaskResponse": {
+            "type": "object",
+            "properties": {
+                "User": {
+                    "$ref": "#/definitions/dto.NewUserOnTaskResponse"
+                },
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "title": {
                     "type": "string"
                 },
                 "user_id": {
@@ -414,6 +771,21 @@ const docTemplate = `{
                 }
             }
         },
+        "dto.NewUpdateAccountRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "full_name"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.NewUpdateAccountResponse": {
             "type": "object",
             "properties": {
@@ -453,6 +825,80 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.NewUpdateTaskRequest": {
+            "type": "object",
+            "required": [
+                "description",
+                "title"
+            ],
+            "properties": {
+                "description": {
+                    "type": "string"
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NewUpdateTaskResponse": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "boolean"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.NewUpdateTasksCategoryRequest": {
+            "type": "object",
+            "required": [
+                "category_id"
+            ],
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "dto.NewUpdateTasksStatusRequest": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "dto.NewUserOnTaskResponse": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string"
+                },
+                "full_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         }

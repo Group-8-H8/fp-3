@@ -4,6 +4,136 @@
         "contact": {}
     },
     "paths": {
+        "/categories": {
+            "get": {
+                "description": "Get all categories",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "Get All Categories",
+                "operationId": "get-all-category",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/dto.NewGetCategoriesResponse"
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new category",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "Create Category",
+                "operationId": "create-new-category",
+                "parameters": [
+                    {
+                        "description": "request body json",
+                        "name": "RequestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewCreateCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewCreateCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{categoryId}": {
+            "get": {
+                "description": "Get category by categories ID",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "Get Category",
+                "operationId": "get-category",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewGetCategoriesResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "Delete Category",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "Delete Category",
+                "operationId": "delete-category",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewDeleteCategoryResponse"
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "description": "Update category name",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "category"
+                ],
+                "summary": "Update Category",
+                "operationId": "update-category",
+                "parameters": [
+                    {
+                        "description": "request body json",
+                        "name": "RequestBody",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateCategoryRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/dto.NewUpdateCategoryResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/users/delete-account": {
             "delete": {
                 "description": "Delete an account",
@@ -121,11 +251,93 @@
         }
     },
     "definitions": {
+        "dto.NewCreateCategoryRequest": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NewCreateCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "dto.NewDeleteAccountResponse": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string"
+                }
+            }
+        },
+        "dto.NewDeleteCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NewGetCategoriesResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "tasks": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dto.NewGetTaskOnCategoriesEndpoint"
+                    }
+                },
+                "type": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NewGetTaskOnCategoriesEndpoint": {
+            "type": "object",
+            "properties": {
+                "category_id": {
+                    "type": "integer"
+                },
+                "created_at": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "title": {
+                    "type": "string"
+                },
+                "updated_at": {
+                    "type": "string"
+                },
+                "user_id": {
+                    "type": "integer"
                 }
             }
         },
@@ -201,6 +413,31 @@
                 },
                 "id": {
                     "type": "integer"
+                },
+                "updated_at": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NewUpdateCategoryRequest": {
+            "type": "object",
+            "required": [
+                "type"
+            ],
+            "properties": {
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.NewUpdateCategoryResponse": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "type": {
+                    "type": "string"
                 },
                 "updated_at": {
                     "type": "string"

@@ -1,8 +1,61 @@
 definitions:
+  dto.NewCreateCategoryRequest:
+    properties:
+      type:
+        type: string
+    required:
+    - type
+    type: object
+  dto.NewCreateCategoryResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      type:
+        type: string
+    type: object
   dto.NewDeleteAccountResponse:
     properties:
       message:
         type: string
+    type: object
+  dto.NewDeleteCategoryResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  dto.NewGetCategoriesResponse:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      tasks:
+        items:
+          $ref: '#/definitions/dto.NewGetTaskOnCategoriesEndpoint'
+        type: array
+      type:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.NewGetTaskOnCategoriesEndpoint:
+    properties:
+      category_id:
+        type: integer
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+      user_id:
+        type: integer
     type: object
   dto.NewLoginRequest:
     properties:
@@ -56,9 +109,112 @@ definitions:
       updated_at:
         type: string
     type: object
+  dto.NewUpdateCategoryRequest:
+    properties:
+      type:
+        type: string
+    required:
+    - type
+    type: object
+  dto.NewUpdateCategoryResponse:
+    properties:
+      id:
+        type: integer
+      type:
+        type: string
+      updated_at:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
+  /categories:
+    get:
+      description: Get all categories
+      operationId: get-all-category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/dto.NewGetCategoriesResponse'
+            type: array
+      summary: Get All Categories
+      tags:
+      - category
+    post:
+      consumes:
+      - application/json
+      description: Create a new category
+      operationId: create-new-category
+      parameters:
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewCreateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/dto.NewCreateCategoryResponse'
+      summary: Create Category
+      tags:
+      - category
+  /categories/{categoryId}:
+    delete:
+      description: Delete Category
+      operationId: delete-category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewDeleteCategoryResponse'
+      summary: Delete Category
+      tags:
+      - category
+    get:
+      description: Get category by categories ID
+      operationId: get-category
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewGetCategoriesResponse'
+      summary: Get Category
+      tags:
+      - category
+    patch:
+      consumes:
+      - application/json
+      description: Update category name
+      operationId: update-category
+      parameters:
+      - description: request body json
+        in: body
+        name: RequestBody
+        required: true
+        schema:
+          $ref: '#/definitions/dto.NewUpdateCategoryRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/dto.NewUpdateCategoryResponse'
+      summary: Update Category
+      tags:
+      - category
   /users/delete-account:
     delete:
       description: Delete an account

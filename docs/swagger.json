@@ -1,8 +1,13 @@
 {
     "swagger": "2.0",
     "info": {
-        "contact": {}
+        "description": "This is a documentation for kanban board API from final project 3 - Group 8 Hacktiv8",
+        "title": "Final Project 3 - Group 8 Hacktiv8",
+        "contact": {},
+        "version": "1.0"
     },
+    "host": "localhost:8080",
+    "basePath": "/api/v1",
     "paths": {
         "/categories": {
             "get": {

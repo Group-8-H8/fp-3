@@ -19,10 +19,18 @@ import (
 
 var PORT string
 
+// @title           Final Project 3 - Group 8 Hacktiv8
+// @version         1.0
+// @description     This is a documentation for kanban board API from final project 3 - Group 8 Hacktiv8
+
+// @host      localhost:8080
+// @BasePath  /api/v1
+
 func StartApp() {
 	db := database.GetPostgresInstance()
 
-	route := gin.Default()
+	r := gin.Default()
+	route := r.Group("/api/v1")
 
 	userRepo := user_pg.NewUserPG(db)
 	userService := service.NewUserService(userRepo)
@@ -74,5 +82,5 @@ func StartApp() {
 	if PORT = os.Getenv("PORT"); PORT == "" {
 		PORT = "3000"
 	}
-	log.Fatalln(route.Run(":" + PORT))
+	log.Fatalln(r.Run(":" + PORT))
 }

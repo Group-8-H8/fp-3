@@ -23,6 +23,7 @@ var PORT string
 // @version         1.0
 // @description     This is a documentation for kanban board API from final project 3 - Group 8 Hacktiv8
 
+// TODO -> host must change in production
 // @host      localhost:8080
 // @BasePath  /api/v1
 

@@ -24,7 +24,7 @@ var PORT string
 // @description     This is a documentation for kanban board API from final project 3 - Group 8 Hacktiv8
 
 // TODO -> host must change in production
-// @host      fp-3-production-fef3.up.railway.app/
+// @host      fp-3-production-fef3.up.railway.app
 // @BasePath  /api/v1
 
 func StartApp() {

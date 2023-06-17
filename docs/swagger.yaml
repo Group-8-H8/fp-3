@@ -238,7 +238,7 @@ definitions:
       id:
         type: integer
     type: object
-host: localhost:8080
+host: fp-3-production-fef3.up.railway.app
 info:
   contact: {}
   description: This is a documentation for kanban board API from final project 3 -

@@ -18,11 +18,11 @@ type databaseConfig struct {
 	dbName   string
 }
 
-func init() {
-	if err := godotenv.Load(); err != nil {
-		log.Fatalln(err.Error())
-	}
-}
+// func init() {
+// 	if err := godotenv.Load(); err != nil {
+// 		log.Fatalln(err.Error())
+// 	}
+// }
 
 func GetDBConfig() gorm.Dialector {
 	dbConfig := databaseConfig{

@@ -12,3 +12,12 @@ See more detail of api specification in [here](https://fp-3-production-fef3.up.r
 
 - email `admin@admin.com`
 - password `admin123`
+
+#### E.G. Body Request
+
+```json
+{
+	"email": "admin@admin.com",
+	"password": "admin123"
+}
+```

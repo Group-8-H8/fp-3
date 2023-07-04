@@ -2,6 +2,7 @@ package http_handler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/Group-8-H8/fp-3/dto"
@@ -158,4 +159,11 @@ func (u *userHandler) DeleteAccount(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, response)
+}
+
+func (u *userHandler) SeedAdminAccount() {
+	err := u.userService.SeedAdminAccount()
+	if err != nil {
+		log.Fatalln(err.Error())
+	}
 }

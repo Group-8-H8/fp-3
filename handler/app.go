@@ -37,6 +37,7 @@ func StartApp() {
 	userService := service.NewUserService(userRepo)
 	userHandler := http_handler.NewUserHandler(userService)
 	authService := service.NewAuthService(userRepo)
+	userHandler.SeedAdminAccount()
 
 	userRoute := route.Group("/users")
 	{

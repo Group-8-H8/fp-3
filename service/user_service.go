@@ -2,6 +2,7 @@ package service
 
 import (
 	"github.com/Group-8-H8/fp-3/dto"
+	"github.com/Group-8-H8/fp-3/entity"
 	"github.com/Group-8-H8/fp-3/pkg/errs"
 	"github.com/Group-8-H8/fp-3/repository/user_repository"
 )
@@ -11,6 +12,7 @@ type UserService interface {
 	Login(payload dto.NewLoginRequest) (*dto.NewLoginResponse, errs.MessageErr)
 	UpdateAccount(payload dto.NewUpdateAccountRequest, id uint) (*dto.NewUpdateAccountResponse, errs.MessageErr)
 	DeleteAccount(userId uint) (*dto.NewDeleteAccountResponse, errs.MessageErr)
+	SeedAdminAccount() errs.MessageErr
 }
 
 type userService struct {
@@ -93,4 +95,28 @@ func (u *userService) DeleteAccount(userId uint) (*dto.NewDeleteAccountResponse,
 	}
 
 	return response, nil
+}
+
+func (u *userService) SeedAdminAccount() errs.MessageErr {
+	user := entity.User{
+		Full_name: "admin",
+		Email:     "admin@admin.com",
+		Password:  "admin123",
+		Role:      "admin",
+	}
+	err := user.HashPassword()
+	if err != nil {
+		return err
+	}
+
+	if _, errGet := u.userRepo.GetUserByEmail(user); errGet == nil {
+		if errDel := u.userRepo.DeleteAccountByEmail(user.Email); errDel != nil {
+			return errDel
+		}
+	}
+
+	if _, errCreate := u.userRepo.Register(user); errCreate != nil {
+		return errCreate
+	}
+	return nil
 }

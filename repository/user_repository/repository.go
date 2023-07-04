@@ -11,4 +11,5 @@ type UserRepository interface {
 	GetUserById(userId int) (*entity.User, errs.MessageErr)
 	UpdateAccount(payload entity.User) (*entity.User, errs.MessageErr)
 	DeleteAccount(userId uint) errs.MessageErr
+	DeleteAccountByEmail(email string) errs.MessageErr
 }

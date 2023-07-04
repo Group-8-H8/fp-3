@@ -66,3 +66,13 @@ func (u *userPG) DeleteAccount(userId uint) errs.MessageErr {
 
 	return nil
 }
+
+func (u *userPG) DeleteAccountByEmail(email string) errs.MessageErr {
+	user := entity.User{}
+
+	if err := u.db.Where("email = ?", email).Delete(&user).Error; err != nil {
+		return errs.NewInternalServerError("something went wrong")
+	}
+
+	return nil
+}

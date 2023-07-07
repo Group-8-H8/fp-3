@@ -908,7 +908,7 @@ const docTemplate = `{
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
-	Host:             "fp-3-production-fef3.up.railway.app",
+	Host:             "fp-3-production-8a1f.up.railway.app",
 	BasePath:         "/api/v1",
 	Schemes:          []string{},
 	Title:            "Final Project 3 - Group 8 Hacktiv8",
